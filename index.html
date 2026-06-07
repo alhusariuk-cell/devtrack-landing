@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DevTrack — Development Finance Platform</title>
+  <meta name="description" content="The development finance platform built by a developer, for developers. Track appraisals, funding, build progress and sales from one place." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Source+Sans+3:wght@300;400;500;600&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:       #1a1a2e;
+      --navy-mid:   #16213e;
+      --gold:       #b8860b;
+      --gold-light: #d4a017;
+      --gold-pale:  #f7f0e0;
+      --ivory:      #faf8f4;
+      --ivory-dark: #f0ece3;
+      --text:       #1a1a2e;
+      --text-sub:   #4a4a5a;
+      --text-muted: #7a7a8a;
+      --border:     #e4ddd0;
+      --green:      #2d6a4f;
+      --red:        #c0392b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--ivory);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── Typography ─────────────────────────────────────────── */
+    .display { font-family: 'Cormorant Garamond', serif; }
+    .mono { font-family: 'Source Code Pro', monospace; }
+
+    /* ── Nav ────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 4rem; height: 64px;
+      background: rgba(250,248,244,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo-icon {
+      width: 32px; height: 32px;
+    }
+    .nav-logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 600;
+    }
+    .nav-logo-text span:first-child { color: var(--navy); }
+    .nav-logo-text span:last-child  { color: var(--gold); }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none; font-size: 14px; font-weight: 500;
+      color: var(--text-sub); transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--navy); }
+
+    .nav-cta {
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+
+    /* ── Buttons ────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 22px; border-radius: 6px;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 14px; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.2s; border: none;
+    }
+    .btn-primary {
+      background: var(--navy); color: #fff;
+    }
+    .btn-primary:hover { background: #2a2a3e; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(26,26,46,0.25); }
+
+    .btn-gold {
+      background: var(--gold); color: #fff;
+    }
+    .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(184,134,11,0.35); }
+
+    .btn-outline {
+      background: transparent; color: var(--navy);
+      border: 1.5px solid var(--navy);
+    }
+    .btn-outline:hover { background: var(--navy); color: #fff; }
+
+    .btn-lg { padding: 14px 32px; font-size: 16px; }
+    .btn-white { background: #fff; color: var(--navy); }
+    .btn-white:hover { background: var(--ivory); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+
+    /* ── Section layout ─────────────────────────────────────── */
+    section { padding: 100px 4rem; }
+    .container { max-width: 1160px; margin: 0 auto; }
+    .section-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    /* ── Hero ───────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      background: var(--navy);
+      display: flex; align-items: center;
+      padding-top: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 800px 600px at 70% 50%, rgba(184,134,11,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 400px 400px at 20% 80%, rgba(184,134,11,0.05) 0%, transparent 60%);
+    }
+
+    /* Grid pattern */
+    #hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .hero-inner {
+      position: relative; z-index: 2;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; align-items: center;
+      max-width: 1160px; margin: 0 auto; width: 100%;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(184,134,11,0.15);
+      border: 1px solid rgba(184,134,11,0.3);
+      border-radius: 20px; padding: 5px 14px;
+      font-size: 12px; font-weight: 600;
+      color: var(--gold-light); letter-spacing: 0.06em;
+      margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--gold-light);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(42px, 5vw, 68px);
+      font-weight: 600; line-height: 1.1;
+      color: #fff; margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+    .hero-title .gold { color: var(--gold-light); }
+    .hero-title .italic { font-style: italic; }
+
+    .hero-sub {
+      font-size: 18px; color: rgba(255,255,255,0.6);
+      line-height: 1.7; margin-bottom: 2.5rem;
+      max-width: 480px;
+    }
+
+    .hero-actions {
+      display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;
+    }
+
+    .hero-proof {
+      margin-top: 3rem; padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex; gap: 3rem;
+    }
+    .hero-stat-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px; font-weight: 600; color: #fff;
+    }
+    .hero-stat-label { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+
+    /* Hero right — app preview */
+    .hero-preview {
+      position: relative;
+    }
+    .hero-preview-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+    }
+    .preview-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 1.25rem; padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .preview-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .preview-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); }
+    .preview-badge {
+      margin-left: auto; font-size: 10px; font-weight: 700;
+      padding: 2px 8px; border-radius: 10px;
+      background: rgba(45,106,79,0.3); color: #6ee7a8;
+    }
+
+    .preview-kpis {
+      display: grid; grid-template-columns: repeat(2,1fr); gap: 8px;
+      margin-bottom: 1rem;
+    }
+    .preview-kpi {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+      border-top: 2px solid var(--gold); border-radius: 8px;
+      padding: 10px 12px;
+    }
+    .preview-kpi-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35); margin-bottom: 4px; }
+    .preview-kpi-value { font-family: 'Source Code Pro', monospace; font-size: 16px; font-weight: 700; color: #fff; }
+    .preview-kpi-sub { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+
+    .preview-bar-row { margin-bottom: 8px; }
+    .preview-bar-label { display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+    .preview-bar-track { height: 5px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+    .preview-bar-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+
+    .preview-tranche {
+      background: rgba(184,134,11,0.1); border: 1px solid rgba(184,134,11,0.2);
+      border-radius: 6px; padding: 8px 10px;
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 8px;
+    }
+    .preview-tranche-label { font-size: 11px; font-weight: 600; color: var(--gold-light); }
+    .preview-tranche-value { font-family: 'Source Code Pro', monospace; font-size: 12px; font-weight: 700; color: #fff; }
+
+    /* Float cards */
+    .float-card {
+      position: absolute;
+      background: var(--ivory);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+      animation: float 3s ease-in-out infinite;
+    }
+    .float-card-1 { top: -20px; right: -20px; animation-delay: 0s; }
+    .float-card-2 { bottom: 40px; left: -30px; animation-delay: 1.5s; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    .float-card-label { font-size: 10px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+    .float-card-value { font-family: 'Source Code Pro', monospace; font-size: 18px; font-weight: 700; color: var(--navy); margin-top: 2px; }
+    .float-card-sub { font-size: 10px; color: var(--green); margin-top: 1px; }
+
+    /* ── Problem ────────────────────────────────────────────── */
+    #problem { background: var(--ivory-dark); }
+    .problem-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; align-items: center;
+    }
+    .problem-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 4vw, 48px); font-weight: 600;
+      line-height: 1.2; color: var(--navy); margin-bottom: 1.5rem;
+    }
+    .problem-title .italic { font-style: italic; color: var(--gold); }
+    .problem-text { font-size: 16px; color: var(--text-sub); line-height: 1.8; margin-bottom: 1.5rem; }
+
+    .pain-list { list-style: none; display: flex; flex-direction: column; gap: 0.875rem; }
+    .pain-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 16px;
+      background: #fff; border: 1px solid var(--border);
+      border-left: 3px solid var(--red); border-radius: 6px;
+      font-size: 14px; color: var(--text-sub);
+    }
+    .pain-icon { color: var(--red); font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    .solution-list { list-style: none; display: flex; flex-direction: column; gap: 0.875rem; }
+    .solution-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 16px;
+      background: #fff; border: 1px solid var(--border);
+      border-left: 3px solid var(--gold); border-radius: 6px;
+      font-size: 14px; color: var(--text-sub);
+    }
+    .solution-icon { color: var(--gold); font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── Features ───────────────────────────────────────────── */
+    #features { background: var(--ivory); }
+    .features-header { text-align: center; margin-bottom: 4rem; }
+    .features-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 4vw, 52px); font-weight: 600;
+      color: var(--navy); line-height: 1.2; margin-bottom: 1rem;
+    }
+    .features-sub { font-size: 17px; color: var(--text-sub); max-width: 560px; margin: 0 auto; }
+
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem;
+    }
+    .feature-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.75rem;
+      transition: all 0.25s;
+    }
+    .feature-card:hover {
+      border-color: var(--gold); transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(184,134,11,0.1);
+    }
+    .feature-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: var(--gold-pale); border: 1px solid rgba(184,134,11,0.2);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.25rem; color: var(--gold);
+    }
+    .feature-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px; font-weight: 600; color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+    .feature-desc { font-size: 13.5px; color: var(--text-muted); line-height: 1.6; }
+    .feature-tag {
+      display: inline-block; margin-top: 0.875rem;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 2px 8px;
+      border-radius: 4px; background: var(--gold-pale); color: var(--gold);
+    }
+
+    /* ── Finance Types ──────────────────────────────────────── */
+    #finance { background: var(--navy); padding: 100px 4rem; }
+    .finance-inner {
+      max-width: 1160px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+    }
+    .finance-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 4vw, 48px); font-weight: 600;
+      color: #fff; line-height: 1.2; margin-bottom: 1.25rem;
+    }
+    .finance-title .gold { color: var(--gold-light); font-style: italic; }
+    .finance-text { font-size: 16px; color: rgba(255,255,255,0.55); line-height: 1.8; margin-bottom: 2rem; }
+
+    .finance-modes {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    }
+    .finance-mode {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px; padding: 1.25rem;
+      transition: all 0.2s;
+    }
+    .finance-mode:hover { border-color: rgba(184,134,11,0.4); background: rgba(184,134,11,0.05); }
+    .finance-mode-badge {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 2px 8px; border-radius: 3px;
+      margin-bottom: 0.75rem; display: inline-block;
+    }
+    .conventional .finance-mode-badge { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); }
+    .murabaha .finance-mode-badge { background: rgba(45,106,79,0.3); color: #6ee7a8; }
+    .finance-mode-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 0.5rem; }
+    .finance-mode-desc { font-size: 12.5px; color: rgba(255,255,255,0.45); line-height: 1.5; }
+
+    .finance-terms {
+      display: grid; gap: 8px;
+    }
+    .term-row {
+      display: flex; justify-content: space-between;
+      padding: 8px 12px; background: rgba(255,255,255,0.03);
+      border-radius: 6px; font-size: 12px;
+    }
+    .term-label { color: rgba(255,255,255,0.4); }
+    .term-conventional { color: rgba(255,255,255,0.7); }
+    .term-murabaha { color: var(--gold-light); font-weight: 600; }
+
+    /* ── How it works ───────────────────────────────────────── */
+    #how { background: var(--ivory-dark); }
+    .how-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 4vw, 52px); font-weight: 600;
+      text-align: center; color: var(--navy); margin-bottom: 4rem;
+    }
+    .steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 2rem; position: relative; }
+    .steps::before {
+      content: '';
+      position: absolute; top: 28px; left: 10%; right: 10%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+    .step { text-align: center; }
+    .step-num {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--navy); border: 2px solid var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 700; color: var(--gold);
+      margin: 0 auto 1.25rem;
+    }
+    .step-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--navy); margin-bottom: 0.5rem; }
+    .step-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── Pricing ────────────────────────────────────────────── */
+    #pricing { background: var(--ivory); }
+    .pricing-header { text-align: center; margin-bottom: 4rem; }
+    .pricing-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 4vw, 52px); font-weight: 600;
+      color: var(--navy); margin-bottom: 1rem;
+    }
+    .pricing-sub { font-size: 16px; color: var(--text-muted); }
+
+    .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; align-items: start; }
+
+    .pricing-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem;
+      position: relative; transition: all 0.25s;
+    }
+    .pricing-card:hover { box-shadow: 0 16px 48px rgba(0,0,0,0.08); transform: translateY(-4px); }
+    .pricing-card.featured {
+      background: var(--navy); border-color: var(--gold);
+      box-shadow: 0 16px 48px rgba(26,26,46,0.2);
+    }
+    .pricing-popular {
+      position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+      background: var(--gold); color: #fff;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 3px 14px; border-radius: 20px;
+      white-space: nowrap;
+    }
+    .pricing-tier { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .pricing-card:not(.featured) .pricing-tier { color: var(--text-muted); }
+    .pricing-card.featured .pricing-tier { color: var(--gold-light); }
+
+    .pricing-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 52px; font-weight: 600; line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    .pricing-card:not(.featured) .pricing-price { color: var(--navy); }
+    .pricing-card.featured .pricing-price { color: #fff; }
+    .pricing-price sup { font-size: 24px; vertical-align: super; }
+    .pricing-price span { font-size: 16px; font-family: 'Source Sans 3', sans-serif; font-weight: 400; }
+    .pricing-period { font-size: 13px; margin-bottom: 1.5rem; }
+    .pricing-card:not(.featured) .pricing-period { color: var(--text-muted); }
+    .pricing-card.featured .pricing-period { color: rgba(255,255,255,0.5); }
+
+    .pricing-desc { font-size: 13px; margin-bottom: 1.75rem; padding-bottom: 1.75rem; border-bottom: 1px solid; }
+    .pricing-card:not(.featured) .pricing-desc { color: var(--text-sub); border-color: var(--border); }
+    .pricing-card.featured .pricing-desc { color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.1); }
+
+    .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem; }
+    .pricing-feature { display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; }
+    .pricing-card:not(.featured) .pricing-feature { color: var(--text-sub); }
+    .pricing-card.featured .pricing-feature { color: rgba(255,255,255,0.8); }
+    .pricing-check { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; }
+    .pricing-card:not(.featured) .pricing-check { color: var(--green); }
+    .pricing-card.featured .pricing-check { color: var(--gold-light); }
+
+    .pricing-cta { width: 100%; text-align: center; padding: 13px; font-size: 15px; border-radius: 8px; }
+
+    /* ── Testimonial / Quote ────────────────────────────────── */
+    #quote {
+      background: var(--gold-pale);
+      border-top: 1px solid rgba(184,134,11,0.2);
+      border-bottom: 1px solid rgba(184,134,11,0.2);
+      padding: 80px 4rem;
+      text-align: center;
+    }
+    .quote-mark { font-family: 'Cormorant Garamond', serif; font-size: 80px; color: var(--gold); line-height: 0.5; margin-bottom: 1rem; display: block; }
+    .quote-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(22px, 3vw, 34px); font-weight: 400; font-style: italic;
+      color: var(--navy); max-width: 760px; margin: 0 auto 1.5rem;
+      line-height: 1.5;
+    }
+    .quote-author { font-size: 14px; font-weight: 600; color: var(--text-muted); }
+
+    /* ── CTA ────────────────────────────────────────────────── */
+    #cta {
+      background: var(--navy); padding: 120px 4rem;
+      text-align: center; position: relative; overflow: hidden;
+    }
+    #cta::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 800px 500px at 50% 100%, rgba(184,134,11,0.12) 0%, transparent 70%);
+    }
+    .cta-inner { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; }
+    .cta-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 5vw, 60px); font-weight: 600;
+      color: #fff; line-height: 1.2; margin-bottom: 1.25rem;
+    }
+    .cta-title .gold { color: var(--gold-light); font-style: italic; }
+    .cta-sub { font-size: 17px; color: rgba(255,255,255,0.55); margin-bottom: 2.5rem; line-height: 1.7; }
+    .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .cta-note { margin-top: 1.25rem; font-size: 13px; color: rgba(255,255,255,0.3); }
+
+    /* ── Footer ─────────────────────────────────────────────── */
+    footer {
+      background: #111122; padding: 3rem 4rem 2rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .footer-inner {
+      max-width: 1160px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem;
+      margin-bottom: 2rem; padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .footer-brand-text { font-size: 13px; color: rgba(255,255,255,0.35); line-height: 1.7; margin-top: 0.75rem; max-width: 260px; }
+    .footer-col-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 1rem; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .footer-links a { font-size: 13px; color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--gold-light); }
+    .footer-bottom {
+      max-width: 1160px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 12px; color: rgba(255,255,255,0.25);
+    }
+    .footer-badge {
+      display: flex; align-items: center; gap: 6px; font-size: 11px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ── Fade-in animations ─────────────────────────────────── */
+    .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .fade-in-delay-1 { transition-delay: 0.1s; }
+    .fade-in-delay-2 { transition-delay: 0.2s; }
+    .fade-in-delay-3 { transition-delay: 0.3s; }
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      nav { padding: 0 1.5rem; }
+      .nav-links { display: none; }
+      section { padding: 70px 1.5rem; }
+      #hero { padding: 80px 1.5rem 70px; }
+      #finance { padding: 70px 1.5rem; }
+      #quote { padding: 60px 1.5rem; }
+      #cta { padding: 80px 1.5rem; }
+      footer { padding: 3rem 1.5rem 2rem; }
+      .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .hero-preview { display: none; }
+      .problem-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .features-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr 1fr; }
+      .steps::before { display: none; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .finance-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .finance-modes { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ── -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <svg class="nav-logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="2,44 2,30 10,30 10,22 18,22 18,44" stroke="#1a1a2e" stroke-width="2.5" stroke-linejoin="miter" stroke-linecap="square" fill="none"/>
+        <polyline points="22,44 22,12 36,12 36,44" stroke="#1a1a2e" stroke-width="2.5" stroke-linejoin="miter" stroke-linecap="square" fill="none"/>
+        <line x1="0" y1="44" x2="40" y2="44" stroke="#1a1a2e" stroke-width="2.5" stroke-linecap="square"/>
+        <line x1="32" y1="16" x2="44" y2="6" stroke="#b8860b" stroke-width="2.5" stroke-linecap="round"/>
+        <polyline points="37,4 46,4 46,13" stroke="#b8860b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <div class="nav-logo-text"><span>Dev</span><span>Track</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#finance">Finance</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="https://devtrack-saas.netlify.app" class="btn btn-outline" style="padding:8px 18px;font-size:13px;">Sign In</a>
+      <a href="https://devtrack-saas.netlify.app" class="btn btn-primary" style="padding:8px 18px;font-size:13px;">Start Free</a>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section id="hero">
+    <div class="hero-inner container">
+      <div>
+        <div class="hero-eyebrow fade-in">
+          <span class="hero-eyebrow-dot"></span>
+          Built by a developer, for developers
+        </div>
+        <h1 class="hero-title fade-in fade-in-delay-1">
+          Development finance,<br>
+          <span class="gold italic">finally under control.</span>
+        </h1>
+        <p class="hero-sub fade-in fade-in-delay-2">
+          From pre-project appraisal to practical completion — track your funding, build progress, planning conditions, sales and lender reporting in one Chartered-quality platform.
+        </p>
+        <div class="hero-actions fade-in fade-in-delay-3">
+          <a href="https://devtrack-saas.netlify.app" class="btn btn-gold btn-lg">Start Free Trial</a>
+          <a href="#features" class="btn btn-white btn-lg" style="background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.2);">See Features</a>
+        </div>
+        <div class="hero-proof fade-in fade-in-delay-3">
+          <div>
+            <div class="hero-stat-value">19</div>
+            <div class="hero-stat-label">Integrated modules</div>
+          </div>
+          <div>
+            <div class="hero-stat-value">Murabaha</div>
+            <div class="hero-stat-label">Islamic finance supported</div>
+          </div>
+          <div>
+            <div class="hero-stat-value">£0</div>
+            <div class="hero-stat-label">To get started</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- App preview card -->
+      <div class="hero-preview fade-in fade-in-delay-2">
+        <div class="hero-preview-card">
+          <div class="preview-header">
+            <div class="preview-dot" style="background:#c0392b;"></div>
+            <div class="preview-dot" style="background:#b8860b;margin-left:4px;"></div>
+            <div class="preview-dot" style="background:#2d6a4f;margin-left:4px;"></div>
+            <span class="preview-title" style="margin-left:8px;">Command Centre</span>
+            <span class="preview-badge">● Live</span>
+          </div>
+          <div class="preview-kpis">
+            <div class="preview-kpi">
+              <div class="preview-kpi-label">Gross Facility</div>
+              <div class="preview-kpi-value">£1.8M</div>
+              <div class="preview-kpi-sub">Murabaha · 11.5% p.a.</div>
+            </div>
+            <div class="preview-kpi">
+              <div class="preview-kpi-label">Drawn to Date</div>
+              <div class="preview-kpi-value">£920K</div>
+              <div class="preview-kpi-sub">51% of facility</div>
+            </div>
+            <div class="preview-kpi">
+              <div class="preview-kpi-label">Total Spend</div>
+              <div class="preview-kpi-value">£680K</div>
+              <div class="preview-kpi-sub">42% of budget</div>
+            </div>
+            <div class="preview-kpi">
+              <div class="preview-kpi-label">Build Progress</div>
+              <div class="preview-kpi-value">68%</div>
+              <div class="preview-kpi-sub">On track</div>
+            </div>
+          </div>
+          <div class="preview-bar-row">
+            <div class="preview-bar-label"><span>Planning conditions</span><span>8/11 discharged</span></div>
+            <div class="preview-bar-track"><div class="preview-bar-fill" style="width:73%;background:#2d6a4f;"></div></div>
+          </div>
+          <div class="preview-bar-row">
+            <div class="preview-bar-label"><span>Building control</span><span>6/11 stages passed</span></div>
+            <div class="preview-bar-track"><div class="preview-bar-fill" style="width:55%;background:#1a1a2e;"></div></div>
+          </div>
+          <div class="preview-tranche">
+            <span class="preview-tranche-label">Next tranche — Tranche C</span>
+            <span class="preview-tranche-value">£450,000</span>
+          </div>
+        </div>
+        <div class="float-card float-card-1">
+          <div class="float-card-label">Profit on cost</div>
+          <div class="float-card-value" style="color:#2d6a4f;">24.3%</div>
+          <div class="float-card-sub">↑ Viable</div>
+        </div>
+        <div class="float-card float-card-2">
+          <div class="float-card-label">Units sold</div>
+          <div class="float-card-value">4 / 6</div>
+          <div class="float-card-sub" style="color:#b8860b;">67% reserved</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Problem → Solution ── -->
+  <section id="problem">
+    <div class="container problem-grid">
+      <div class="fade-in">
+        <div class="section-label">The problem</div>
+        <h2 class="problem-title">Managing a development<br>is <span class="italic">chaos</span> without the right tools</h2>
+        <p class="problem-text">
+          Most small developers juggle spreadsheets, WhatsApp chains, paper files and memory. 
+          Lenders ask questions you can't answer quickly. Conditions get missed. Costs spiral. 
+          Nothing connects.
+        </p>
+        <ul class="pain-list">
+          <li class="pain-item"><span class="pain-icon">✕</span>Funding drawdown schedule buried in a spreadsheet nobody's updated</li>
+          <li class="pain-item"><span class="pain-icon">✕</span>Planning conditions outstanding — nobody sure which need discharging first</li>
+          <li class="pain-item"><span class="pain-icon">✕</span>Lender requesting monitoring report with 3 days' notice</li>
+          <li class="pain-item"><span class="pain-icon">✕</span>Build budget vs actual — impossible to see at a glance</li>
+        </ul>
+      </div>
+      <div class="fade-in fade-in-delay-1">
+        <div class="section-label">The solution</div>
+        <h2 class="problem-title" style="margin-top:0;">Everything in one<br><span class="italic" style="color:var(--gold);">connected platform</span></h2>
+        <p class="problem-text">
+          DevTrack connects every part of your development — from the initial appraisal 
+          through to sales completions. Real-time. Lender-ready. Built the way developers actually work.
+        </p>
+        <ul class="solution-list">
+          <li class="solution-item"><span class="solution-icon">✓</span>Pre-project appraisals that convert directly into tracked projects</li>
+          <li class="solution-item"><span class="solution-icon">✓</span>Funding facility with S-curve drawdown modelling</li>
+          <li class="solution-item"><span class="solution-icon">✓</span>One-click lender monitoring report, always up to date</li>
+          <li class="solution-item"><span class="solution-icon">✓</span>Live budget vs actual across all cost categories</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Features ── -->
+  <section id="features">
+    <div class="container">
+      <div class="features-header fade-in">
+        <div class="section-label">Platform modules</div>
+        <h2 class="features-title">Everything a developer needs.<br>Nothing they don't.</h2>
+        <p class="features-sub">19 integrated modules covering the full development lifecycle — from deal appraisal to completion.</p>
+      </div>
+      <div class="features-grid">
+
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="22" height="22"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <div class="feature-name">Development Appraisal</div>
+          <div class="feature-desc">Full pre-project appraisal with S-curve finance modelling, SDLT multi-mode, unit mix, sensitivity sliders and PDF export. Convert to active project with one click.</div>
+          <span class="feature-tag">Deal Pipeline</span>
+        </div>
+
+        <div class="feature-card fade-in fade-in-delay-1">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="22" height="22"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="feature-name">Funding & Drawdowns</div>
+          <div class="feature-desc">Manage your facility with tranche-by-tranche drawdown tracking. Auto-calculates retained interest. Full QS certificate workflow. Interest tracker included.</div>
+          <span class="feature-tag">Finance</span>
+        </div>
+
+        <div class="feature-card fade-in fade-in-delay-2">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="22" height="22"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <div class="feature-name">Budget Control</div>
+          <div class="feature-desc">Track budgeted, committed and actual spend by category. Visual progress bars per category. Variance analysis at a glance.</div>
+          <span class="feature-tag">Finance</span>
+        </div>
+
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="22" height="22"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><path d="M9 5a2 2 0 002 2h2a2 2 0 002-2"/><polyline points="9 12 11 14 15 10"/></svg>
+          </div>
+          <div class="feature-name">Planning & Consents</div>
+          <div class="feature-desc">Track every planning condition with trigger type, discharge status, document upload and notes. Never miss a pre-commencement condition again.</div>
+          <span class="feature-tag">Compliance</span>
+        </div>
+
+        <div class="feature-card fade-in fade-in-delay-1">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="22" height="22"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <div class="feature-name">Building Control</div>
+          <div class="feature-desc">11 standard BC stages pre-loaded. Log notification dates, inspector visits and outcomes. Attach inspection reports. Track remediation when required.</div>
+          <span class="feature-tag">Compliance</span>
+        </div>
+
+        <div class="feature-card fade-in fade-in-delay-2">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="22" height="22"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div class="feature-name">Programme (Gantt)</div>
+          <div class="feature-desc">Visual Gantt chart with drag-to-update stage bars. Track build progress percentage per stage. Key milestones with overdue alerts.</div>
+          <span class="feature-tag">Programme</span>
+        </div>
+
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="22" height="22"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <div class="feature-name">Contractors</div>
+          <div class="feature-desc">Manage all contractors with contract values, payment tracking, retention calculations and payment status. Contact details and contract dates in one place.</div>
+          <span class="feature-tag">Project</span>
+        </div>
+
+        <div class="feature-card fade-in fade-in-delay-1">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="22" height="22"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <div class="feature-name">Sales & Completions</div>
+          <div class="feature-desc">Track unit-by-unit sales pipeline from reservation through to completion. GDV realisation, tenure split, buyer details and completion dates.</div>
+          <span class="feature-tag">Sales</span>
+        </div>
+
+        <div class="feature-card fade-in fade-in-delay-2">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="22" height="22"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="feature-name">Lender Portal</div>
+          <div class="feature-desc">Professional monitoring report auto-generated from live project data. RAG status dashboard, drawdown schedule, risk summary. Print or share with your lender.</div>
+          <span class="feature-tag">Reporting</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Finance Types ── -->
+  <section id="finance" style="padding:100px 4rem;">
+    <div class="finance-inner container">
+      <div class="fade-in">
+        <div class="section-label" style="color:rgba(184,134,11,0.8);">Finance types</div>
+        <h2 class="finance-title">Conventional and<br><span class="gold">Murabaha</span> finance,<br>both supported.</h2>
+        <p class="finance-text">
+          Switch your project to Murabaha and every label across the entire platform changes — 
+          "Interest" becomes "Profit share", "Lender" becomes "Finance Provider", 
+          "Maturity date" becomes "Settlement date". No configuration needed.
+        </p>
+        <div class="finance-modes">
+          <div class="finance-mode conventional">
+            <span class="finance-mode-badge">STANDARD</span>
+            <div class="finance-mode-title">Conventional Finance</div>
+            <div class="finance-mode-desc">Standard UK development finance. Interest accrues on drawn balance. Retained interest deducted at each tranche release.</div>
+          </div>
+          <div class="finance-mode murabaha">
+            <span class="finance-mode-badge">ISLAMIC FINANCE</span>
+            <div class="finance-mode-title">Murabaha</div>
+            <div class="finance-mode-desc">Sharia-compliant development finance. Total profit agreed upfront. No daily interest accrual. Fully Sharia-compliant tracking.</div>
+          </div>
+        </div>
+      </div>
+      <div class="fade-in fade-in-delay-1">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:1rem;">Terminology — automatic switching</div>
+        <div class="finance-terms">
+          <div class="term-row"><span class="term-label">Rate label</span><span class="term-conventional">Interest rate</span><span class="term-murabaha">Profit rate</span></div>
+          <div class="term-row"><span class="term-label">Retained label</span><span class="term-conventional">Retained interest</span><span class="term-murabaha">Retained profit</span></div>
+          <div class="term-row"><span class="term-label">Facility label</span><span class="term-conventional">Loan facility</span><span class="term-murabaha">Finance facility</span></div>
+          <div class="term-row"><span class="term-label">Lender label</span><span class="term-conventional">Lender</span><span class="term-murabaha">Finance Provider</span></div>
+          <div class="term-row"><span class="term-label">Date label</span><span class="term-conventional">Maturity date</span><span class="term-murabaha">Settlement date</span></div>
+          <div class="term-row"><span class="term-label">Accrual label</span><span class="term-conventional">Interest accrued</span><span class="term-murabaha">Profit share allocated</span></div>
+        </div>
+        <div style="margin-top:1.5rem;padding:1rem 1.25rem;background:rgba(184,134,11,0.1);border:1px solid rgba(184,134,11,0.2);border-radius:8px;font-size:12.5px;color:rgba(255,255,255,0.5);line-height:1.6;">
+          S-curve finance modelling calculates profit separately for land finance (drawn day 1, full term) and build finance (drawn in stages, 60% average utilisation).
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── How it works ── -->
+  <section id="how">
+    <div class="container">
+      <h2 class="how-title fade-in">From appraisal to <span style="color:var(--gold);font-style:italic;">completion</span></h2>
+      <div class="steps">
+        <div class="step fade-in">
+          <div class="step-num">1</div>
+          <div class="step-title">Appraise the deal</div>
+          <div class="step-desc">Run a full development appraisal — GDV, costs, finance, returns. Test sensitivity. Make an offer through the deal pipeline.</div>
+        </div>
+        <div class="step fade-in fade-in-delay-1">
+          <div class="step-num">2</div>
+          <div class="step-title">Convert & seed</div>
+          <div class="step-desc">One click converts the appraisal into an active project. Budget lines, facility and sales units are pre-populated automatically.</div>
+        </div>
+        <div class="step fade-in fade-in-delay-2">
+          <div class="step-num">3</div>
+          <div class="step-title">Track live</div>
+          <div class="step-desc">Log drawdowns, spend, site notes, contractor payments and planning conditions as the project progresses.</div>
+        </div>
+        <div class="step fade-in fade-in-delay-3">
+          <div class="step-num">4</div>
+          <div class="step-title">Report instantly</div>
+          <div class="step-desc">Generate a professional lender monitoring report from live data at any time. Print or export as PDF.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Quote ── -->
+  <section id="quote">
+    <div class="container">
+      <span class="quote-mark">"</span>
+      <p class="quote-text fade-in">
+        I built DevTrack because I was managing a six-unit development in Enfield and couldn't find a single platform that understood how development finance actually works — especially Murabaha. So I built it myself.
+      </p>
+      <div class="quote-author fade-in fade-in-delay-1">Dr. Mahmoud Al-Husari · Founder, DevTrack · Property Developer</div>
+    </div>
+  </section>
+
+  <!-- ── Pricing ── -->
+  <section id="pricing">
+    <div class="container">
+      <div class="pricing-header fade-in">
+        <div class="section-label">Pricing</div>
+        <h2 class="pricing-title">Simple, transparent pricing</h2>
+        <p class="pricing-sub">No setup fees. No per-user charges. Cancel any time.</p>
+      </div>
+      <div class="pricing-grid">
+
+        <!-- Starter -->
+        <div class="pricing-card fade-in">
+          <div class="pricing-tier">Starter</div>
+          <div class="pricing-price"><sup>£</sup>0<span>/month</span></div>
+          <div class="pricing-period">Free forever</div>
+          <div class="pricing-desc">Perfect for getting started and evaluating your first project.</div>
+          <ul class="pricing-features">
+            <li class="pricing-feature">
+              <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              1 active project
+            </li>
+            <li class="pricing-feature">
+              <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Budget Control, Risk Register
+            </li>
+            <li class="pricing-feature">
+              <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Planning & Building Control
+            </li>
+            <li class="pricing-feature">
+              <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Site Notes & Spend Ledger
+            </li>
+            <li class="pricing-feature" style="opacity:.4;">
+              <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              Lender Portal
+            </li>
+            <li class="pricing-feature" style="opacity:.4;">
+              <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              Development Appraisals
+            </li>
+          </ul>
+          <a href="https://devtrack-saas.netlify.app" class="btn btn-outline pricing-cta">Get Started Free</a>
+        </div>
+
+        <!-- Pro -->
+        <div class="pricing-card featured fade-in fade-in-delay-1">
+          <div class="pricing-popular">Most Popular</div>
+          <div class="pricing-tier">Pro</div>
+          <div class="pricing-price"><sup>£</sup>79<span>/month</span></div>
+          <div class="pricing-period">Billed monthly · no contract</div>
+          <div class="pricing-desc">Everything you need to run a professional development business.</div>
+          <ul class="pricing-features">
+            <li class="pricing-feature">
+              <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Unlimited projects
+            </li>
+            <li class="pricing-feature">
+              <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              All 19 modules
+            </li>
+            <li class="pricing-feature">
+              <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Lender Portal & Reports
+            </li>
+            <li class="pricing-feature">
+              <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Development Appraisals
+            </li>
+            <li class="pricing-feature">
+              <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Murabaha + Conventional finance
+            </li>
+            <li class="pricing-feature">
+              <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Portfolio overview
+            </li>
+          </ul>
+          <a href="https://devtrack-saas.netlify.app" class="btn btn-gold pricing-cta">Start Pro Trial</a>
+        </div>
+
+        <!-- Studio -->
+        <div class="pricing-card fade-in fade-in-delay-2">
+          <div class="pricing-tier">Studio</div>
+          <div class="pricing-price"><sup>£</sup>199<span>/month</span></div>
+          <div class="pricing-period">For teams and agencies</div>
+          <div class="pricing-desc">For development companies managing multiple projects with a team.</div>
+          <ul class="pricing-features">
+            <li class="pricing-feature">
+              <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Everything in Pro
+            </li>
+            <li class="pricing-feature">
+              <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Up to 5 team members
+            </li>
+            <li class="pricing-feature">
+              <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              White-label PDF reports
+            </li>
+            <li class="pricing-feature">
+              <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Investor read-only access
+            </li>
+            <li class="pricing-feature">
+              <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Priority support
+            </li>
+            <li class="pricing-feature">
+              <svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Custom onboarding
+            </li>
+          </ul>
+          <a href="mailto:hello@devtrack.co.uk" class="btn btn-outline pricing-cta">Contact Us</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section id="cta" style="padding:120px 4rem;">
+    <div class="cta-inner fade-in">
+      <div class="section-label" style="color:rgba(184,134,11,0.7);">Get started today</div>
+      <h2 class="cta-title">Stop managing your development<br>with <span class="gold">spreadsheets.</span></h2>
+      <p class="cta-sub">Join developers already using DevTrack to manage their projects with confidence. Free to start — no credit card required.</p>
+      <div class="cta-actions">
+        <a href="https://devtrack-saas.netlify.app" class="btn btn-gold btn-lg">Start Free Trial</a>
+        <a href="https://devtrack-saas.netlify.app" class="btn btn-white btn-lg" style="background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.2);">Sign In</a>
+      </div>
+      <div class="cta-note">No credit card · Free tier always available · Cancel any time</div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <a href="#" class="nav-logo" style="margin-bottom:0.75rem;display:inline-flex;">
+          <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
+            <polyline points="2,44 2,30 10,30 10,22 18,22 18,44" stroke="white" stroke-width="2.5" stroke-linejoin="miter" stroke-linecap="square" fill="none" opacity="0.8"/>
+            <polyline points="22,44 22,12 36,12 36,44" stroke="white" stroke-width="2.5" stroke-linejoin="miter" stroke-linecap="square" fill="none" opacity="0.8"/>
+            <line x1="0" y1="44" x2="40" y2="44" stroke="white" stroke-width="2.5" stroke-linecap="square" opacity="0.8"/>
+            <line x1="32" y1="16" x2="44" y2="6" stroke="#b8860b" stroke-width="2.5" stroke-linecap="round"/>
+            <polyline points="37,4 46,4 46,13" stroke="#b8860b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;margin-left:8px;">
+            <span style="color:#fff;">Dev</span><span style="color:#b8860b;">Track</span>
+          </div>
+        </a>
+        <p class="footer-brand-text">The development finance platform built by a developer, for developers. Managing projects across the full lifecycle from appraisal to completion.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Platform</div>
+        <ul class="footer-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="https://devtrack-saas.netlify.app">Sign in</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Modules</div>
+        <ul class="footer-links">
+          <li><a href="#">Appraisals</a></li>
+          <li><a href="#">Funding & Drawdowns</a></li>
+          <li><a href="#">Lender Portal</a></li>
+          <li><a href="#">Planning & BC</a></li>
+          <li><a href="#">Reports</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="#">About</a></li>
+          <li><a href="mailto:hello@devtrack.co.uk">Contact</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 DevTrack. All rights reserved. Registered in England & Wales.</span>
+      <div class="footer-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="12" height="12"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Built for UK property developers
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Fade-in on scroll
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } })
+    }, { threshold: 0.1 })
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el))
+
+    // Trigger hero animations immediately
+    document.querySelectorAll('#hero .fade-in').forEach(el => {
+      setTimeout(() => el.classList.add('visible'), 100)
+    })
+  </script>
+</body>
+</html>
