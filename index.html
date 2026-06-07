@@ -267,38 +267,59 @@
     .float-card-sub { font-size: 10px; color: var(--green); margin-top: 1px; }
 
     /* ── Problem ────────────────────────────────────────────── */
-    #problem { background: var(--ivory-dark); }
-    .problem-grid {
+    /* ── Problem / Solution redesign v2 ── */
+    #problem { background: var(--ivory); padding: 100px 4rem; }
+    .problem-wrap {
       display: grid; grid-template-columns: 1fr 1fr;
-      gap: 5rem; align-items: center;
+      gap: 4rem; align-items: start;
+      max-width: 1160px; margin: 0 auto;
     }
-    .problem-title {
+    .problem-side, .solution-side {
+      display: flex; flex-direction: column;
+    }
+    .ps-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .problem-side .ps-label { color: var(--red); }
+    .solution-side .ps-label { color: var(--gold); }
+    .ps-label::before {
+      content: ''; display: inline-block;
+      width: 24px; height: 2px; border-radius: 2px;
+    }
+    .problem-side .ps-label::before { background: var(--red); }
+    .solution-side .ps-label::before { background: var(--gold); }
+    .ps-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(32px, 4vw, 48px); font-weight: 600;
-      line-height: 1.2; color: var(--navy); margin-bottom: 1.5rem;
+      font-size: clamp(28px, 3vw, 40px); font-weight: 600;
+      line-height: 1.2; margin-bottom: 1rem; color: var(--navy);
     }
-    .problem-title .italic { font-style: italic; color: var(--gold); }
-    .problem-text { font-size: 16px; color: var(--text-sub); line-height: 1.8; margin-bottom: 1.5rem; }
-
-    .pain-list { list-style: none; display: flex; flex-direction: column; gap: 0.875rem; }
+    .ps-title .italic { font-style: italic; }
+    .problem-side .ps-title .italic { color: var(--red); }
+    .solution-side .ps-title .italic { color: var(--gold); }
+    .ps-sub { font-size: 15px; color: var(--text-sub); line-height: 1.7; margin-bottom: 1.75rem; }
+    .pain-list { list-style: none; display: flex; flex-direction: column; gap: 0.625rem; }
     .pain-item {
       display: flex; align-items: flex-start; gap: 12px;
-      padding: 14px 16px;
-      background: #fff; border: 1px solid var(--border);
-      border-left: 3px solid var(--red); border-radius: 6px;
-      font-size: 14px; color: var(--text-sub);
+      padding: 13px 16px; border-radius: 8px;
+      background: #fff7f7;
+      border: 1px solid rgba(192,57,43,0.12);
+      border-left: 3px solid rgba(192,57,43,0.4);
+      font-size: 13.5px; color: var(--text-sub); line-height: 1.5;
     }
-    .pain-icon { color: var(--red); font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-
-    .solution-list { list-style: none; display: flex; flex-direction: column; gap: 0.875rem; }
+    .pain-icon { color: var(--red); flex-shrink: 0; margin-top: 2px; }
+    .solution-list { list-style: none; display: flex; flex-direction: column; gap: 0.625rem; }
     .solution-item {
       display: flex; align-items: flex-start; gap: 12px;
-      padding: 14px 16px;
-      background: #fff; border: 1px solid var(--border);
-      border-left: 3px solid var(--gold); border-radius: 6px;
-      font-size: 14px; color: var(--text-sub);
+      padding: 13px 16px; border-radius: 8px;
+      background: #fffdf5;
+      border: 1px solid rgba(184,134,11,0.15);
+      border-left: 3px solid var(--gold);
+      font-size: 13.5px; color: var(--text-sub); line-height: 1.5;
     }
-    .solution-icon { color: var(--gold); font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .solution-icon { color: var(--gold); flex-shrink: 0; margin-top: 2px; }
+    .divider-arrow { display: none; }
 
     /* ── Features ───────────────────────────────────────────── */
     #features { background: var(--ivory); }
@@ -554,7 +575,7 @@
       footer { padding: 3rem 1.5rem 2rem; }
       .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
       .hero-preview { display: none; }
-      .problem-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .problem-wrap { grid-template-columns: 1fr; gap: 3rem; }
       .features-grid { grid-template-columns: 1fr; }
       .steps { grid-template-columns: 1fr 1fr; }
       .steps::before { display: none; }
@@ -687,36 +708,60 @@
 
   <!-- ── Problem → Solution ── -->
   <section id="problem">
-    <div class="container problem-grid">
-      <div class="fade-in">
-        <div class="section-label">The problem</div>
-        <h2 class="problem-title">Managing a development<br>is <span class="italic">chaos</span> without the right tools</h2>
-        <p class="problem-text">
-          Most small developers juggle spreadsheets, WhatsApp chains, paper files and memory. 
-          Lenders ask questions you can't answer quickly. Conditions get missed. Costs spiral. 
-          Nothing connects.
-        </p>
+    <div class="problem-wrap">
+
+      <!-- Pain side — dark navy -->
+      <div class="problem-side fade-in" style="position:relative;">
+        <div class="ps-label">Before DevTrack</div>
+        <h2 class="ps-title">Managing a development<br>is <span class="italic">chaos</span><br>without the right tools</h2>
+        <p class="ps-sub">Most small developers juggle spreadsheets, WhatsApp chains, paper files and memory. Lenders ask questions you can't answer. Costs spiral. Nothing connects.</p>
         <ul class="pain-list">
-          <li class="pain-item"><span class="pain-icon">✕</span>Funding drawdown schedule buried in a spreadsheet nobody's updated</li>
-          <li class="pain-item"><span class="pain-icon">✕</span>Planning conditions outstanding — nobody sure which need discharging first</li>
-          <li class="pain-item"><span class="pain-icon">✕</span>Lender requesting monitoring report with 3 days' notice</li>
-          <li class="pain-item"><span class="pain-icon">✕</span>Build budget vs actual — impossible to see at a glance</li>
+          <li class="pain-item">
+            <svg class="pain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" style="margin-top:2px;flex-shrink:0;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Funding drawdown schedule buried in a spreadsheet nobody's updated
+          </li>
+          <li class="pain-item">
+            <svg class="pain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" style="margin-top:2px;flex-shrink:0;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Planning conditions outstanding — nobody sure which need discharging first
+          </li>
+          <li class="pain-item">
+            <svg class="pain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" style="margin-top:2px;flex-shrink:0;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Lender requesting monitoring report with 3 days' notice
+          </li>
+          <li class="pain-item">
+            <svg class="pain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" style="margin-top:2px;flex-shrink:0;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Build budget vs actual — impossible to see at a glance
+          </li>
         </ul>
+        <!-- Arrow divider -->
+        <div class="divider-arrow">→</div>
       </div>
-      <div class="fade-in fade-in-delay-1">
-        <div class="section-label">The solution</div>
-        <h2 class="problem-title" style="margin-top:0;">Everything in one<br><span class="italic" style="color:var(--gold);">connected platform</span></h2>
-        <p class="problem-text">
-          DevTrack connects every part of your development — from the initial appraisal 
-          through to sales completions. Real-time. Lender-ready. Built the way developers actually work.
-        </p>
+
+      <!-- Solution side — ivory -->
+      <div class="solution-side fade-in fade-in-delay-1">
+        <div class="ps-label">With DevTrack</div>
+        <h2 class="ps-title">Everything in one<br><span class="italic">connected platform</span></h2>
+        <p class="ps-sub">DevTrack connects every part of your development — from the initial appraisal through to sales completions. Real-time. Lender-ready. Built the way developers actually work.</p>
         <ul class="solution-list">
-          <li class="solution-item"><span class="solution-icon">✓</span>Pre-project appraisals that convert directly into tracked projects</li>
-          <li class="solution-item"><span class="solution-icon">✓</span>Funding facility with S-curve drawdown modelling</li>
-          <li class="solution-item"><span class="solution-icon">✓</span>One-click lender monitoring report, always up to date</li>
-          <li class="solution-item"><span class="solution-icon">✓</span>Live budget vs actual across all cost categories</li>
+          <li class="solution-item">
+            <svg class="solution-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" style="margin-top:2px;flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg>
+            Pre-project appraisals that convert directly into tracked projects
+          </li>
+          <li class="solution-item">
+            <svg class="solution-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" style="margin-top:2px;flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg>
+            Funding facility with S-curve drawdown modelling — always up to date
+          </li>
+          <li class="solution-item">
+            <svg class="solution-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" style="margin-top:2px;flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg>
+            One-click lender monitoring report generated from live data
+          </li>
+          <li class="solution-item">
+            <svg class="solution-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" style="margin-top:2px;flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg>
+            Live budget vs actual across all cost categories — at a glance
+          </li>
         </ul>
       </div>
+
     </div>
   </section>
 
